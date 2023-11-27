@@ -64,8 +64,8 @@ jobs:
        key: ${{ secrets.SSH_PRIVATE_KEY }}
        port: ${{ secrets.PORT }}
        script: |
-        git clone https://github.com/your-username/your-repo.git
-        cd your-repo
+        git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+        cd /home/ubuntu/CICD_GitHubActions_Jenkins.git
         git checkout staging
         git pull origin staging
         git checkout main
