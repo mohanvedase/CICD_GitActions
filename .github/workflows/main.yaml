@@ -1,80 +1,47 @@
-name: Ec2-deployment
+name: Staging to Main Deployment
 
-on: 
+on:
   push:
-    branches: 
+    branches:
       - staging
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          repository: mohanvedase/CICD_GitActions.git
-          ref: staging
-          token: ${{ secrets.ACCESS_TOKEN }}  # Ensure you have the appropriate token
-          ssh-strict: true
-          persist-credentials: true
-          clean: true
-          fetch-depth: 1
-          lfs: false
-          submodules: false
-          set-safe-directory: true
-      
-      - name: Set up Git identity
-        run: |
-          git config --global user.email "mohankandikuppa119@gmail.com"
-          git config --global user.name "mohanvedase"
-        
-     
-      - name: code checkout
-        uses: actions/checkout@v2
-      
-      - name: install dependencies
-        run: |
-         sudo apt update
-         sudo apt install python3-pip
-         sudo pip install flask
-         sudo pip install streamlit
-         sudo pip install pytest
-  
-  test:
-    runs-on: ubuntu-latest
-    needs: build  # Ensure that 'test' job runs after 'build' job
     
-    steps:     
-    - name: code checkout
+    steps:
+    - name: Checkout code
       uses: actions/checkout@v2
       
-    - name: install dependencies
+    - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install python3-pip
-        sudo pip install flask
-        sudo pip install pytest
-        
-    - name: build and test
-      run: |
-        # testing scripts
-        pytest test_app.py
-        
-    - name: Checkout Repository
+        sudo apt install -y python3-pip
+        sudo pip install -r requirements.txt  # Install dependencies from requirements.txt
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    outputs:
+      tests_passed: ${{ steps.test_result.outputs.tests_passed }}
+
+    steps:
+    - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        repository: mohanvedase/CICD_GitActions.git
       
-    - name: pushing code to main
-      if: ${{ github.ref == 'refs/heads/staging' && success() }}
+    - name: Install dependencies
       run: |
-        git config --global user.email "mohankandikuppa119@gmail.com"
-        git config --global user.name "mohanvedase"
-        git checkout staging .
-        git switch -c main  # Create and switch to main branch if it doesn't exist
-        git add .
-        git commit -m "Copying changes from staging to main"
-        git push https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}.git main
+        sudo apt update
+        sudo apt install -y python3-pip
+        sudo pip install -r requirements.txt  # Install dependencies from requirements.txt
+        
+    - name: Run tests
+      id: test_result
+      run: |
+        # Execute your testing scripts, assuming pytest is used
+        pytest test_app.py
+        echo "::set-output name=tests_passed::true"  # Set the output if tests pass
+      continue-on-error: true  # Continue even if tests fail}}.git main
         
   deploy:
     runs-on: ubuntu-latest
