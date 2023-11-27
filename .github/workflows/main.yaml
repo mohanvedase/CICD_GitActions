@@ -60,7 +60,7 @@ jobs:
         git switch -c main  # Create and switch to main branch if it doesn't exist
         git add .
         git commit -m "Copying changes from staging to main"
-        git push origin main
+        git push https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}.git main
         
   deploy:
     runs-on: ubuntu-latest
