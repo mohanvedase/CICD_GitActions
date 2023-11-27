@@ -20,6 +20,8 @@ jobs:
           pip install flask
           pip install streamlit
           pip install pytest
+      - name: Run Flask Application
+        run: python app.py &
 
   test:
     runs-on: ubuntu-latest
