@@ -1,79 +1,70 @@
-name: Build, Test & Deploy Flask application
+name: Ec2-deployment
 
-on:
+on: 
   push:
-    branches:
+    branches: 
       - staging
-      - main
-jobs:
+
+jobs: 
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-          
-      - name: Install Flask
-        run: pip install flask
-
-      - name: Run Flask Application
-        run: python app.py &
+    
+    steps: 
+    - name: code checkout
+      uses: actions/checkout@v2
+      
+    - name: install dependencies
+      run: |
+        sudo apt update
+        sudo apt install python3-pip
+        sudo pip install flask
+        sudo pip install streamlit
+        sudo pip install pytest
+  
   test:
     runs-on: ubuntu-latest
-
-    needs: build
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-          
-      - name: Set executable permission
-        run: chmod +x test_app.py
-
-      - name: Install Flask
-        run: pip install flask
-
-      - name: Install pytest
-        run: pip install pytest
-
-
-      - name: Test Python code
-        run: pytest test_app.py
-      
-        
-  
-  deploy_production:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-    - name: Checkout Repository
+    needs: build  # Ensure that 'test' job runs after 'build' job
+    
+    steps:     
+    - name: code checkout
       uses: actions/checkout@v2
-
-    - name: Deploy to Main
+      
+    - name: install dependencies
+      run: |
+        sudo apt update
+        sudo apt install python3-pip
+        sudo pip install flask
+        sudo pip install pytest
+        
+    - name: build and test
+      run: |
+        # testing scripts
+        pytest test_app.py
+      
+    - name: pushing code to main
+      if: ${{ github.ref == 'refs/heads/staging' && success() }}
+      run: |
+        git checkout staging .
+        git checkout main
+        git add .
+        git commit -m "Copying changes from staging to main"
+        git push origin main
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  # Ensure that 'deploy' job runs after 'test' job
+    
+    steps:         
+    - name: deployment step
       uses: appleboy/ssh-action@v1.0.0
       with:
-       host: ${{ secrets.EC2_HOST }}
-       username: ${{ secrets.EC2_USERNAME }}
-       key: ${{ secrets.SSH_PRIVATE_KEY }}
-       port: ${{ secrets.PORT }}
-       script: |
-        git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
-        cd /home/ubuntu/CICD_GitHubActions_Jenkins.git
-        git checkout staging
-        git pull origin staging
-        git push origin staging:main --force
-        #git add .
-        #git push origin main 
-
-   
-
-  
-          
-
-     
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: | 
+          cd /home/ubuntu/
+          git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+          sudo apt install -y python3-pip
+          sudo pip install flask
+          # sudo python3 /home/ubuntu/Jenkins/app.py
