@@ -3,6 +3,7 @@ name: Build, Test & Deploy Flask application
 on:
   push:
     branches:
+      - staging
       - main
 jobs:
   build:
