@@ -1,4 +1,4 @@
-name: Build, Test and Deploy Flask application
+name: Build, Test & Deploy Flask application
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         port: ${{ secrets.PORT }}
         script: | 
 
