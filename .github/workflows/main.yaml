@@ -4,12 +4,16 @@ on:
   push:
     branches: 
       - staging
-
 jobs: 
   build:
     runs-on: ubuntu-latest
     
     steps: 
+    - name: Set up Git identity
+      run: |
+        git config --global user.email "mohankandikuppa119@gmail.com"
+        git config --global user.name "mohanvedase"
+      
     - name: code checkout
       uses: actions/checkout@v2
       
@@ -44,6 +48,7 @@ jobs:
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
       run: |
+
         git checkout staging .
         git switch -c main  # Create and switch to main branch if it doesn't exist
         git add .
