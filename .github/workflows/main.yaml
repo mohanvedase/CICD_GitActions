@@ -63,8 +63,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           # Commands to run on the EC2 instance
-          git clone https://github.com/your-username/your-repo.git
-          cd your-repo
+          git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+          cd CICD_GitHubActions_Jenkins
           git checkout staging
   deploy_production:
     runs-on: ubuntu-latest
