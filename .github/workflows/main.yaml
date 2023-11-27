@@ -57,8 +57,10 @@ jobs:
 
     - name: Deploy to Staging
       run: |
+        git config --global user.email "mohankandikuppa119@gmail.com"
+        git config --global user.name "mohankrishna"
         git add .
-        git commit -m "deployog into staging"
+        git commit -m "deploying into staging"
         git push
         # Your staging deployment commands here
         echo "Deploying to staging..."
@@ -75,6 +77,8 @@ jobs:
     - name: Deploy to Production
       run: |
         # Your production deployment commands here
+        git config --global user.email "mohankandikuppa119@gmail.com"
+        git config --global user.name "mohankrishna"
         git add . 
         git commit -m "deploying into main"
         git push origin main
