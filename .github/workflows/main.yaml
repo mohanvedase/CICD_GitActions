@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          repository: mohanvedase/CICD_GitActions
+          repository: mohanvedase/CICD_GitActions.git
           token: ${{ secrets.ACCESS_TOKEN }}  # Ensure you have the appropriate token
           ssh-strict: true
           persist-credentials: true
