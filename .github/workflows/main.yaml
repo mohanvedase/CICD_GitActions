@@ -49,6 +49,8 @@ jobs:
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
       run: |
+        git config --global user.email "mohankandikuppa119@gmail.com"
+        git config --global user.name "mohanvedase"
         git checkout staging .
         git switch -c main  # Create and switch to main branch if it doesn't exist
         git add .
