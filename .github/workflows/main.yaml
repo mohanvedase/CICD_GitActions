@@ -1,53 +1,70 @@
 name: Ec2-deployment
 
-on:
+on: 
   push:
-    branches:
+    branches: 
       - staging
 
-jobs:
+jobs: 
   build:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: code checkout
-        uses: actions/checkout@v2
-
-      - name: install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y python3-pip
-          sudo pip install flask
-          sudo pip install streamlit
-          sudo pip install pytest
-      - name: Run Flask Application
-        run: sudo python app.py &
-
+    
+    steps: 
+    - name: code checkout
+      uses: actions/checkout@v2
+      
+    - name: install dependencies
+      run: |
+        sudo apt update
+        sudo apt install python3-pip
+        sudo pip install flask
+        sudo pip install streamlit
+        sudo pip install pytest
+  
   test:
     runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: build and test
-        run: |
-          # testing scripts
-           pytest test_app.py
-
+    needs: build  # Ensure that 'test' job runs after 'build' job
+    
+    steps:     
+    - name: code checkout
+      uses: actions/checkout@v2
+      
+    - name: install dependencies
+      run: |
+        sudo apt update
+        sudo apt install python3-pip
+        sudo pip install flask
+        sudo pip install pytest
+        
+    - name: build and test
+      run: |
+        # testing scripts
+        pytest test_app.py
+      
+    - name: pushing code to main
+      if: ${{ github.ref == 'refs/heads/staging' && success() }}
+      run: |
+        git checkout staging .
+        git switch -c main  # Create and switch to main branch if it doesn't exist
+        git add .
+        git commit -m "Copying changes from staging to main"
+        git push origin main
+        
   deploy:
     runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: deployment step
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /home/ubuntu/
-            git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
-            apt install -y python3-pip
-            pip install flask
-            # sudo python3 /home/ubuntu/Jenkins/app.py
+    needs: test  # Ensure that 'deploy' job runs after 'test' job
+    
+    steps:         
+    - name: deployment step
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: | 
+          cd /home/ubuntu/
+          git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+          sudo apt install -y python3-pip
+          sudo pip install flask
+          # sudo python3 /home/ubuntu/Jenkins/app.py
