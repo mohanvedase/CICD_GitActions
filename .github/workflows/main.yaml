@@ -15,6 +15,7 @@ jobs:
       
     - name: install dependencies
       run: |
+        
         sudo apt update
         sudo apt install python3-pip
         sudo pip install flask
@@ -44,6 +45,8 @@ jobs:
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
       run: |
+        git config --global user.email "mohankandikuppa119@gmail.com"
+        git config --global user.name "Mohan Krishna"
         git checkout staging .
         git switch -c main  # Create and switch to main branch if it doesn't exist
         git add .
