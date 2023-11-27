@@ -45,6 +45,11 @@ jobs:
       run: |
         # testing scripts
         pytest test_app.py
+        
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        repository: https://github.com/mohanvedase/CICD_GitActions.git
       
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
