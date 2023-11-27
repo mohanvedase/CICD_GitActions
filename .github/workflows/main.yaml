@@ -8,16 +8,12 @@ on:
 jobs: 
   build:
     runs-on: ubuntu-latest
-    steps: 
-      # Add the checkout step here if it's not already present in your workflow
-      - name: Checkout staging branch
-        uses: actions/checkout@v2
-        with:
-          ref: staging
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           repository: mohanvedase/CICD_GitActions.git
+          ref: staging
           token: ${{ secrets.ACCESS_TOKEN }}  # Ensure you have the appropriate token
           ssh-strict: true
           persist-credentials: true
