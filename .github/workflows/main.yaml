@@ -31,7 +31,7 @@ jobs:
       - name: build and test
         run: |
           # testing scripts
-          sudo pytest test_app.py
+           pytest test_app.py
 
   deploy:
     runs-on: ubuntu-latest
