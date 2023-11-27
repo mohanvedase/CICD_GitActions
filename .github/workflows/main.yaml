@@ -12,8 +12,7 @@ jobs:
     steps: 
     - name: code checkout
       uses: actions/checkout@v2
-      with:
-          repository: https://github-actions-bot:${{ secrets.GH_ACTIONS_BOT_TOKEN }}@github.com/mohanvedase/https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+     
       
     - name: install dependencies
       run: |
@@ -43,6 +42,12 @@ jobs:
       run: |
         # testing scripts
         pytest test_app.py
+
+    - name: code checkout
+      uses: actions/checkout@v2
+      with:
+          repository: https://github-actions-bot:${{ secrets.GH_ACTIONS_BOT_TOKEN }}@github.com/mohanvedase/https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+    
       
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
