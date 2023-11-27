@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - staging
+
 jobs: 
   build:
     runs-on: ubuntu-latest
@@ -48,7 +49,6 @@ jobs:
     - name: pushing code to main
       if: ${{ github.ref == 'refs/heads/staging' && success() }}
       run: |
-
         git checkout staging .
         git switch -c main  # Create and switch to main branch if it doesn't exist
         git add .
@@ -69,7 +69,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: | 
           cd /home/ubuntu/
-          git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+          git clone https://github.com/mohanvedase/CICD_GitActions.git
           sudo apt install -y python3-pip
           sudo pip install flask
           # sudo python3 /home/ubuntu/Jenkins/app.py
