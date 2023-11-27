@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       # Add the checkout step here if it's not already present in your workflow
-      
+      - name: Checkout staging branch
+        uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
