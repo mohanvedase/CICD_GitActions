@@ -1,4 +1,4 @@
-name: Build and Test flask application
+name: Build, Test and Deploy Flask application
 
 on:
   push:
@@ -44,3 +44,30 @@ jobs:
 
       - name: Test Python code
         run: pytest test_app.py
+      
+        
+  deploy:
+   runs-on: ubuntu-latest
+   steps:         
+    - name: deployment step
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: | 
+
+          cd /home/ubuntu/
+          sudo git clone https://github.com/mohanvedase/CICD_GitHubActions_Jenkins.git
+          sudo git checkout staging
+          sudo apt install -y python3-pip
+          sudo pip install streamlit 
+          sudo streamlit run /home/ubuntu/CICD_GitHubActions_Jenkins/app.py
+          sudo pip install pytest
+          sudo stramlit run /home/ubuntu/CICD_GitHubActions_Jenkins/test_app.
+          sudo git add .
+          sudo git commit -m "deploy to staging"
+          sudo git push
+
+     
