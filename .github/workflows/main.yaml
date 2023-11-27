@@ -8,23 +8,38 @@ on:
 jobs: 
   build:
     runs-on: ubuntu-latest
-    
     steps: 
-    - name: Set up Git identity
-      run: |
-        git config --global user.email "mohankandikuppa119@gmail.com"
-        git config --global user.name "mohanvedase"
+      # Add the checkout step here if it's not already present in your workflow
       
-    - name: code checkout
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: mohanvedase/CICD_GitActions
+          token: ${{ secrets.ACCESS_TOKEN }}  # Ensure you have the appropriate token
+          ssh-strict: true
+          persist-credentials: true
+          clean: true
+          fetch-depth: 1
+          lfs: false
+          submodules: false
+          set-safe-directory: true
       
-    - name: install dependencies
-      run: |
-        sudo apt update
-        sudo apt install python3-pip
-        sudo pip install flask
-        sudo pip install streamlit
-        sudo pip install pytest
+      - name: Set up Git identity
+        run: |
+          git config --global user.email "mohankandikuppa119@gmail.com"
+          git config --global user.name "mohanvedase"
+        
+     
+      - name: code checkout
+        uses: actions/checkout@v2
+      
+      - name: install dependencies
+        run: |
+         sudo apt update
+         sudo apt install python3-pip
+         sudo pip install flask
+         sudo pip install streamlit
+         sudo pip install pytest
   
   test:
     runs-on: ubuntu-latest
