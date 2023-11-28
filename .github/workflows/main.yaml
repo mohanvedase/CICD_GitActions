@@ -78,8 +78,8 @@ jobs:
       run: sudo git pull origin staging
 
     - name: Make script executable
-      run: sudo chmod +x deploy.sh
+      run: sudo chmod +x Deploy.sh
 
     - name: Run deploy.sh script
-      run: ./deploy.sh
+      run: ./Deploy.sh
 
