@@ -64,8 +64,9 @@ jobs:
 
     - name: Configure SSH agent
       run: |
-        eval "$(ssh-agent -s)"
-        ssh-add - <<< "${{ secrets.EC2_PRIVATE_KEY }}"
+       eval "$(ssh-agent -s)"
+       echo "${{ secrets.EC2_PRIVATE_KEY }}" | ssh-add -
+
 
     - name: Deployment step
       if: github.ref == 'refs/heads/staging'
