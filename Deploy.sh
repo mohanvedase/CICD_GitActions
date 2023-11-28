@@ -39,7 +39,7 @@ if [[ $(git status | grep 'modified:' | wc -l) -ne 0 ]]; then
   git commit -m "Code is modified"
 
   # Push the committed changes to the main branch
-  git push origin main
+  git push origin "$staging_branch":"$main_branch" --force
 
   echo "Changes pushed to $main_branch branch."
 else
