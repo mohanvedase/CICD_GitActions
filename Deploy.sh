@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Enable debugging output
+set -x
+
 # Set the path to your repository
 repo_path="/home/ubuntu/CICD_GitActions"
 
