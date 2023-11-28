@@ -62,10 +62,14 @@ jobs:
         sudo chmod 600 mohan-linux.pem
         echo "Private key set up"
 
+    - name: Store private key in file
+      run: echo -e "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
+
     - name: Configure SSH agent
       run: |
         eval "$(ssh-agent -s)"
-        echo -e "${{ secrets.EC2_PRIVATE_KEY }}" | ssh-add -
+        cat private_key.pem | ssh-add -
+
 
 
 
