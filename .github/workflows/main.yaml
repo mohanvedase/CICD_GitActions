@@ -55,6 +55,9 @@ jobs:
         echo "SSH Key: ${{ secrets.EC2_SSH_KEY }}"
         echo "Host: ${{ secrets.EC2_HOST }}"
         echo "Username: ${{ secrets.EC2_USERNAME }}"
+
+
+        
     - name: Deployment step
       if: github.ref == 'refs/heads/staging'
       uses: appleboy/ssh-action@v1.0.0
