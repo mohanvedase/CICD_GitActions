@@ -63,11 +63,10 @@ jobs:
         sudo chmod 600 mohan-linux.pem
         echo "Private key set up".
 
-
     - name: Deployment step
       if: github.ref == 'refs/heads/staging'
       run: |
         cd /home/ubuntu/CICD_GitActions
         sudo git pull origin staging
-        sudo chmod +x deploy.sh
-        ./deploy.sh   # Run your deploy.sh script
+        sudo chmod +x /home/ubuntu/CICD_GitActions/deploy.sh
+         /home/ubuntu/CICD_GitActions/deploy.sh   # Run your deploy.sh script
