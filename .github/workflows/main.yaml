@@ -63,8 +63,6 @@ jobs:
         sudo chmod 600 mohan-linux.pem
         echo "Private key set up".
 
-    - name: Execute Command with Elevated Privileges
-      run: sudo command_to_execute
 
     - name: Create directory if not exists
       run: sudo mkdir -p /home/ubuntu/CICD_GitActions
