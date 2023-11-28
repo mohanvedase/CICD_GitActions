@@ -71,6 +71,9 @@ jobs:
     - name: Change to the directory
       run:  cd /home/ubuntu/CICD_GitActions
 
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Pull from Git
       run: sudo git pull origin staging
 
