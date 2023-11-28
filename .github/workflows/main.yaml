@@ -75,35 +75,12 @@ jobs:
       if: github.ref == 'refs/heads/staging'
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        script: | 
-          cd /home/ubuntu/
-          git clone https://github.com/mohanvedase/CICD_GitActions.git
-          sudo apt install -y python3-pip
-          sudo pip install flask
-          python app.py &
-          pytest test_app.py
-          git push origin staging
-          git push origin staging:main --force
-          
-          # Add commands to deploy to the staging branch
-
-    - name: Deployment step
-      if: github.ref == 'refs/heads/main'
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        script: | 
-          cd /home/ubuntu/
-          git clone https://github.com/mohanvedase/CICD_GitActions.git
-          sudo apt install -y python3-pip
-          sudo pip install flask
-          git pull origin staging
-          git push origin staging:main --force
-          # Add commands to deploy to the main branch
+       host: ${{ secrets.EC2_HOST }}
+       username: ${{ secrets.EC2_USERNAME }}
+       key: ${{ secrets.EC2_SSH_KEY }}
+       port: ${{ secrets.PORT }}
+       script: | 
+        cd /home/ubuntu/CICD_GitActions
+        git pull origin staging
+        ./deploy.sh   # Run your deploy.sh script
+       
