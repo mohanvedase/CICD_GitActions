@@ -60,9 +60,14 @@ jobs:
         echo "${{ secrets.EC2_PRIVATE_KEY }}" > mohan-linux.pem
         chmod 600 mohan-linux.pem
         echo "Private key set up"
-        ssh -i $PRIVATE_KEY_PATH ec2-user@your-ec2-instance "cd /home/ubuntu/CICD_GitActions && git pull origin main
+        # ssh -i $PRIVATE_KEY_PATH ec2-user@your-ec2-instance "cd /home/ubuntu/CICD_GitActions && git pull origin main "
       env:
         PRIVATE_KEY_PATH: ./mohan-linux.pem
+
+    - name: Deploy to EC2
+      run: |
+        # Your deployment script using the private key
+        ssh -i $PRIVATE_KEY_PATH ec2-user@your-ec2-instance "cd /home/ubuntu/CICD_GitActions && git pull origin main "
 
 
         
