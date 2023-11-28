@@ -1,50 +1,80 @@
-#!/bin/bash
+name: Staging to Main Deployment
 
-# Set the path to your repository
-repo_path="/home/ubuntu/CICD_GitActions"
+on:
+  push:
+    branches:
+      - staging
+      - main
 
-# Set the branches
-staging_branch="staging"
-main_branch="main"
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-# Set the version
-version="v1.0"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-# Change directory to the repository
-cd "$repo_path"
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y python3-pip
+        sudo pip install -r requirements.txt  # Install dependencies from requirements.txt.
+        sudo python app.py &
+  test:
+    runs-on: ubuntu-latest
+    needs: build
 
-# Pull the latest changes from the staging branch
-git pull origin "$staging_branch"
+    outputs:
+      tests_passed: ${{ steps.test_result.outputs.tests_passed }}
 
-# Check if there are uncommitted changes in the staging branch
-if git diff --quiet; then
-  echo "No code changes detected. Skipping deployment."
-else
-  # Install or update dependencies (if needed)
-  sudo apt update
-  sudo apt install -y python3-pip
-  sudo pip install -r requirements.txt
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  # Optionally, stop the existing application (if running)
-  # ...
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y python3-pip
+        sudo pip install -r requirements.txt  # Install dependencies from requirements.txt
+    - name: Run tests
+      id: test_result
+      run: |
+        # Execute your testing scripts, assuming pytest is used
+        pytest test_app.py
+        echo "::set-output name=tests_passed::true"  # Set the output if tests pass
+      continue-on-error: true  # Continue even if tests fail
 
-  # Start your application (e.g., Flask app)
-  nohup python app.py &
-  pytest test_app.py
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  # Ensure that 'deploy' job runs after 'test' job
 
-  # Optionally, run additional deployment tasks
+    steps:
+    - name: Debug SSH
+      run: |
+        echo "SSH Key: ${{ secrets.EC2_SSH_KEY }}"
+        echo "Host: ${{ secrets.EC2_HOST }}"
+        echo "Username: ${{ secrets.EC2_USERNAME }}"
+        
+    - name: Set up SSH key
+      run: |
+        echo "${{ secrets.EC2_PRIVATE_KEY }}" > mohan-linux.pem
+        sudo chmod 600 mohan-linux.pem
+        echo "Private key set up".
+    - name: Create directory if not exists
+      run: sudo mkdir -p /home/ubuntu/CICD_GitActions
 
-  # Stage all changes
-  git add .
 
-  # Commit all changes with a descriptive message
-  git commit -m "Deploy changes from $staging_branch to $main_branch"
+    - name: Change to the directory
+      run:  cd /home/ubuntu/CICD_GitActions
 
-  # Tag the commit with the version
-  git tag -a "$version" -m "Release version $version"
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  # Push the committed changes and the tag to the main branch
-  git push origin main --tags
+    - name: Pull from Git
+      run: sudo git pull origin staging
 
-  echo "Changes and version $version pushed to $main_branch branch."
-fi
+    - name: Make script executable
+      run: sudo chmod +x Deploy.sh
+
+    - name: Run deploy.sh script
+      run: ./Deploy.sh
