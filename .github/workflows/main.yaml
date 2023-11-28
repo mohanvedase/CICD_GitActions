@@ -72,6 +72,7 @@ jobs:
        username: ${{ secrets.EC2_USERNAME }}
        key: ${{ secrets.EC2_SSH_KEY }}
        port: ${{ secrets.PORT }}
+       agent-forwarding: true
        script: | 
         cd /home/ubuntu/CICD_GitActions
         sudo git pull origin staging
