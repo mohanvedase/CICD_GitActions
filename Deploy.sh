@@ -10,12 +10,13 @@ main_branch="main"
 # Change directory to the repository
 cd "$repo_path"
 
+# Configure Git to use rebase for pull operations
+sudo git config pull.rebase true
+
 # Fetch and pull the latest changes from the staging branch
 sudo git fetch origin "$staging_branch"
 sudo git pull --rebase origin "$staging_branch"
 
-# Rebase changes from the staging branch onto the main branch
-sudo git rebase "origin/$staging_branch"
 
 # Check if there are uncommitted changes in the staging branch
 if [[ $(git status | grep 'modified:' | wc -l) -ne 0 ]]; then
