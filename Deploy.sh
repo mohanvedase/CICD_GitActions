@@ -14,7 +14,7 @@ main_branch="main"
 cd "$repo_path"
 
 # Pull the latest changes from the staging branch
-git pull origin "$staging_branch"
+sudo git pull --rebase origin "$staging_branch"
 
 # Check if there are uncommitted changes in the staging branch
 if [[ $(git status | grep 'modified:' | wc -l) -ne 0 ]]; then
