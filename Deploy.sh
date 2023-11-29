@@ -13,7 +13,8 @@ main_branch="main"
 # Change directory to the repository
 cd "$repo_path"
 
-# Pull the latest changes from the staging branch
+# Fetch and pull the latest changes from the staging branch
+sudo git fetch origin "$staging_branch"
 sudo git pull --rebase origin "$staging_branch"
 
 # Check if there are uncommitted changes in the staging branch
