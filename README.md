@@ -15,4 +15,4 @@ Automate Python web app testing and deployment using Jenkins:
 Implement GitHub Actions for workflow automation:
 - **Setup:** Utilize GitHub Actions in the provided Python repository, defining steps for Dependency Installation, Testing, Build, and Deployment.
 - **Secret Management:** Use GitHub Secrets to safeguard sensitive deployment information.
-- **Documentation:** Update [GitHubActions](https://github.com/sayanalokesh/Jenkins/blob/main/GitHub%20Actions.md) with setup instructions and details about the GitHub Actions workflow.
+- **Documentation:** Update [GitHubActions]() with setup instructions and details about the GitHub Actions workflow.
